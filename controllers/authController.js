@@ -7,7 +7,7 @@ import JWT from 'jsonwebtoken'
 export const registerController = async (req,res) =>{
     
     try {
-        const {name,email,password,phone,address,role} = await req.body;
+        const {name,email,password,phone,address,securitykey,role} = await req.body;
 
     // checking user
     const existingUser = await userModel.findOne({email});
@@ -21,7 +21,7 @@ export const registerController = async (req,res) =>{
     const hashedPassword = await hashPassword(password)
 
     // creating new user after checking all details
-    const user = await new userModel({name,email,password:hashedPassword,phone,address,role}).save()
+    const user = await new userModel({name,email,password:hashedPassword,phone,address,securitykey,role}).save()
     return res.status(201).send({
         success:true,
         message:"registration successfull",
@@ -86,6 +86,45 @@ export const loginController = async (req,res) =>{
     }
 }
 
+export const forgetPasswordController = async(req,res) =>{
+    try {
+        const {email,newpassword,securitykey} = req.body;
+        if(!email){
+            return res.status(401).send({success:false,message:"email is required"})
+        }
+        if(!newpassword){
+            return res.status(401).send({success:false,message:"new password is required"})
+        }
+        if(!securitykey){
+            return res.status(401).send({success:false,message:"security key is required"})
+        }
+
+        //check user 
+        const user = await userModel.findOne({email});
+        //validation
+        if(!user){
+            return res.status(404).send({success:false,message:"email is not registered"})
+        }
+
+        if(securitykey !== user.securitykey){
+            return res.status(500).send({success:false,message:"please check your security key"})
+        }
+        //hashing new password
+        const hashed = await hashPassword(newpassword)
+
+        //updating password
+        await userModel.findByIdAndUpdate(user._id,{password:hashed})
+        res.status(200).send({success:true,message:"password reset successfully"})
+
+    } catch (error) {
+        console.log("error in forget password controller")
+        return res.status(500).send({
+            success:false,
+            message:"something went wrong",
+            error
+        })
+    }
+}
 
 //test controller
 export const testController = async(req,res) =>{

@@ -12,13 +12,14 @@ export default function Register() {
     const [password,setPassword] = useState('')
     const [phone,setPhone] = useState('')
     const [address,setAddress] = useState('')
+    const [securitykey , setSecurityKey] = useState('')
     
 
     // form function for sending data on server
     const submitHandler = async (e) =>{
         try {
           e.preventDefault()
-          let res = await axios.post(`${process.env.REACT_APP_API}/api/v1/auth/register`,{name,email,password,phone,address})
+          let res = await axios.post(`${process.env.REACT_APP_API}/api/v1/auth/register`,{name,email,password,phone,address,securitykey})
           if(res.data.success){
             toast.success(res.data.message)
             navigate('/login')
@@ -63,6 +64,12 @@ export default function Register() {
     onChange={(e)=>setAddress(e.target.value)}
     value={address}
     placeholder="Enter Your Address"/>
+    <input 
+    type="text" 
+    className="form-control"
+    onChange={(e)=>setSecurityKey(e.target.value)}
+    value={securitykey}
+    placeholder="Enter Your Security Key"/>
     <button 
     type="submit" 
     className="btn btn-primary">Submit</button>

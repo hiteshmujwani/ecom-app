@@ -55,6 +55,10 @@ export default function Login() {
     <button 
     type="submit" 
     className="btn btn-primary">Login</button>
+    <button 
+    type="button" 
+    className="btn btn-primary m-3"
+    onClick={()=>{navigate('/forget-password')}}>Reset Password</button>
     </form>
     </Layout>
   )
