@@ -12,6 +12,11 @@ router.get('/test',requireSignIn,isAdmin, testController)
 router.get('/user-auth',requireSignIn,(req,res)=>{
     res.status(200).send({ok:true})
 })
+
+//checking that this req is from admin - admin validation
+router.get('/admin-auth',requireSignIn,isAdmin,(req,res)=>{
+    res.status(200).send({ok:true})
+})
 //forget password
 router.post('/forget-password',forgetPasswordController)
 

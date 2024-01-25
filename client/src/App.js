@@ -11,16 +11,21 @@ import Login from './pages/auth/Login.js';
 import Dashboard from './pages/user/Dashboard.js';
 import { PrivateRoute } from './components/Routes/Private.js';
 import ForgetPassword from './pages/auth/ForgetPassword.js';
+import AdminDashboard from './pages/admin/AdminDashboard.js';
+import { AdminRoute } from './components/Routes/AdminRoute.js';
 
 function App() {
   return (
     <Routes>
       <Route path='/' element={<Home/>}/>
-
+      {/* { user dashboard} */}
       <Route path='/dashboard' element={<PrivateRoute/>}>
-      <Route path='' element={<Dashboard/>}/>
+      <Route path='user' element={<Dashboard/>}/>
       </Route>
-
+     {/* { Admin Dashboard} */}
+      <Route path='/dashboard' element={<AdminRoute/>}>
+      <Route path='admin' element={<AdminDashboard/>}/>
+      </Route>
       <Route path='/login' element={<Login/>}/>
       <Route path='/forget-password' element={<ForgetPassword/>}/>
       <Route path='/register' element={<Register/>}/>

@@ -42,7 +42,7 @@ export default function Header() {
     {auth.user.name}
   </NavLink>
   <ul className="dropdown-menu">
-    <li><NavLink className="dropdown-item" to={'/dashboard'}>Dashboard</NavLink></li>
+    <li><NavLink className="dropdown-item" to={`/dashboard/${auth.user.role === 1 ? "admin" : "user"}`}>Dashboard</NavLink></li>
     <li><NavLink className="dropdown-item" onClick={handleLogout} aria-current="page" to="/login">Logout</NavLink></li>
   </ul>
 </li>
