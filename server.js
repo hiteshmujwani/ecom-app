@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv"
 import connectDb from "./database/db.js";
 import authRoute from './routes/authRoute.js'
+import categoryRoute from './routes/categoryRoute.js'
+import productRoute from './routes/productRoute.js'
 import cors from 'cors'
 const app = express();
 
@@ -21,8 +23,8 @@ connectDb();
 
 //routes 
 app.use('/api/v1/auth', authRoute)
-
-
+app.use('/api/v1/category',categoryRoute)
+app.use('/api/v1/product',productRoute)
 app.get('/',(req,res)=>{
     res.send("hellow from hitesh")
 })

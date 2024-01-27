@@ -1,10 +1,25 @@
 import React from 'react'
 import Layout from '../../components/Layout/Layout'
-
+import UserMenu from '../../components/UserMenu'
+import { useAuth } from '../../context/auth'
 function Dashboard() {
+    const [auth] = useAuth()
   return (
-    <Layout tittle="Dashboard - Ecommerce App">
-        <div>Dashboard</div>
+    <Layout tittle="ADMIN DASHBOARD - ECOMMERCE APP">
+      <div className="container-fluid">
+        <div className="row">
+           <div className="col-md-3">
+            <UserMenu/>
+           </div>
+           <div className="col-md-3">
+            <div className="card">
+              <h3>USER NAME : {auth.user.name}</h3>
+              <h3>USER EMAIL : {auth.user.email}</h3>
+              <h3>USER CONTACT : {auth.user.phone}</h3>
+            </div>
+           </div>
+        </div>
+      </div>
     </Layout>
     
   )

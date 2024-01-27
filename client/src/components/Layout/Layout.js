@@ -13,7 +13,7 @@ export default function Layout(props) {
     <title>{props.tittle}</title>
     </Helmet>
         <Header/>
-        <main style={{"height":"80vh"}}>
+        <main style={{"minheight":"80vh"}}>
             {props.children}
             <Toaster/>
         </main>
