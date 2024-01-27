@@ -78,7 +78,7 @@ export default function CreateCategory() {
       return (
         <tr key={c._id}>
         <td >{c.name}</td>
-        <td ><button className="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" onClick={()=>{setSelected(c._id)}}>edit</button> <button className='btn btn-primary ms-2' onClick={()=>{handleDelete(c._id)}}>delete</button></td>
+        <td ><button className="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" onClick={()=>{setSelected(c._id);setUpdatedName(c.name)}}>edit</button> <button className='btn btn-primary ms-2' onClick={()=>{handleDelete(c._id)}}>delete</button></td>
       </tr>
       )
     })}

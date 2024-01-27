@@ -27,7 +27,7 @@ export default function ForgetPassword() {
         } catch (error) {
           toast.error("CHECK EMAIL OR SECURITY KEY")
         }
-    }
+    }   
   return (
     <Layout tittle={"Reset Password - Ecommerce App"}>
     <form className="" onSubmit={submitHandler}>

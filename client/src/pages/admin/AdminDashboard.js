@@ -11,7 +11,7 @@ export default function AdminDashboard() {
            <div className="col-md-3">
             <AdminMenu/>
            </div>
-           <div className="col-md-3">
+           <div className="col-md-9">
             <div className="card">
               <h3>ADMIN NAME : {auth.user.name}</h3>
               <h3>ADMIN EMAIL : {auth.user.email}</h3>
