@@ -4,6 +4,7 @@ import Layout from '../../components/Layout/Layout'
 import toast from 'react-hot-toast'
 import {useState , useEffect} from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 export default function CreateProduct() {
   const [categories,setCategories] = useState([])
   const [name, setName] = useState('')
@@ -13,6 +14,7 @@ export default function CreateProduct() {
   const [price, setPrice] = useState('')
   const [quantity, setQuantity] = useState('')
   const [shipping, setShipping] = useState('')
+  const navigate = useNavigate()
 
   const getCategories = async() =>{
     const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/category/all-categories`)
@@ -34,10 +36,11 @@ export default function CreateProduct() {
     productdata.append("quantity",quantity)
     productdata.append("photo",photo)
     productdata.append("shipping",shipping)
-    console.log({name,description,price,category,quantity,photo,shipping})
+ 
     const res = await axios.post(`${process.env.REACT_APP_API}/api/v1/product/create-product`,productdata)
     if(res.data.success){
       toast.success("product created")
+      navigate('/dashboard/admin/products')
     }
   } 
   return (
@@ -51,7 +54,7 @@ export default function CreateProduct() {
           <h1>Create Product</h1>
           <div>
             
-              <select className='w-100' onChange={(e)=>{setCategory(e.nativeEvent.target.value)}} >
+              <select className='w-100' onChange={(e)=>{setCategory(e.target.value)}} >
                 {categories.map((c)=>(
                   <option key={c._id} value={c._id}>{c.name}</option>
                 ))}
