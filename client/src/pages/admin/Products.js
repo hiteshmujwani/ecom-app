@@ -30,11 +30,12 @@ export const Products = () => {
                 <div className="d-flex flex-wrap gap-4 align-items-center justify-content-center">
                 {products ? products.map((p)=>(
                     <Link to={`/dashboard/admin/products/${p.slug}`}>
-                        <div className="card" style={{width: '18rem',height:"20rem"}}>
+                        <div className="card" style={{width: '18rem'}}>
                         <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} className="card-img-top" alt={p.slug} />
                         <div className="card-body">
                             <h5 className="card-title">{p.name}</h5>
                             <p className="card-text">{p.description}</p>
+                            <p className="card-text">{p.category.name}</p>
                             <NavLink className="btn btn-primary">{p.price}</NavLink>
                         </div>
                         </div>

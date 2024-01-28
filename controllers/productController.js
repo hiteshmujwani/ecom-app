@@ -133,3 +133,24 @@ export const getPhotoController = async(req,res) =>{
         })
     }
 }
+
+
+export const filterProductController = async (req,res) =>{
+   try {
+    const {checked,radio} = req.body;
+   
+    console.log(radio)
+    let args = {}
+    if(checked.length > 0) args.category = checked;
+    if(radio.length) args.price = {$gte:radio};
+     const products = await productModel.find(args);
+     console.log(args)
+     res.status(200).send({
+        success:true,
+        message:"filter complete",
+        products
+     })
+   } catch (error) {
+    console.log(error)
+   }
+}   

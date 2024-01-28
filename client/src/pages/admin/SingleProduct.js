@@ -35,7 +35,7 @@ export const SingleProduct = () => {
         const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/get-product/${params.slug}`)
         console.log(res)
         setName(res.data.product.name)
-        setCategory(res.data.product.category)
+        setCategory(res.data.product.category.name)
         setDescription(res.data.product.description)
         setPrice(res.data.product.price)
         setQuantity(res.data.product.quantity)
@@ -51,7 +51,8 @@ export const SingleProduct = () => {
 
 
     const handleUpdateProduct = async (e) =>{
-        e.preventDefault()
+        try {
+          e.preventDefault()
         const productdata = new FormData()
         productdata.append("name",name)
         productdata.append("description",description)
@@ -64,6 +65,9 @@ export const SingleProduct = () => {
         if(res.data.success){
           toast.success("product created")
           navigate('/dashboard/admin/products')
+        }
+        } catch (error) {
+          console.log(error)
         }
       } 
 
@@ -90,7 +94,8 @@ export const SingleProduct = () => {
           <h1>Create Product</h1>
           <div>
             
-              <select className='w-100' onChange={(e)=>{setCategory(e.target.value)}} >
+              <select className='w-100'  onChange={(e)=>{setCategory(e.target.value)}} >
+              <option> select Category</option>
                 {categories.map((c)=>(
                   <option key={c._id} value={c._id}>{c.name}</option>
                 ))}

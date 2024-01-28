@@ -18,7 +18,7 @@ export default function CreateProduct() {
 
   const getCategories = async() =>{
     const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/category/all-categories`)
-    console.log()
+
     setCategories(res.data.categories)
   }
   useEffect(()=>{
@@ -27,7 +27,6 @@ export default function CreateProduct() {
 
   //create product request
   const handleCreateProduct = async (e) =>{
-    e.preventDefault()
     const productdata = new FormData()
     productdata.append("name",name)
     productdata.append("description",description)
@@ -55,6 +54,7 @@ export default function CreateProduct() {
           <div>
             
               <select className='w-100' onChange={(e)=>{setCategory(e.target.value)}} >
+              <option>select Category</option>
                 {categories.map((c)=>(
                   <option key={c._id} value={c._id}>{c.name}</option>
                 ))}
