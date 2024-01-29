@@ -139,12 +139,10 @@ export const filterProductController = async (req,res) =>{
    try {
     const {checked,radio} = req.body;
    
-    console.log(radio)
     let args = {}
     if(checked.length > 0) args.category = checked;
     if(radio.length) args.price = {$gte:radio};
-     const products = await productModel.find(args);
-     console.log(args)
+     const products = await productModel.find(args)
      res.status(200).send({
         success:true,
         message:"filter complete",
@@ -154,3 +152,27 @@ export const filterProductController = async (req,res) =>{
     console.log(error)
    }
 }   
+
+export const totalProductController = async (req,res) =>{
+    try {
+        const total = await productModel.estimatedDocumentCount();
+        res.status(200).send({
+            success:true,
+            total
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export const moreProductController = async(req,res) =>{
+    const page = req.params.page ? req.params.page : 1;
+    const perPage = 4
+
+    const products = await productModel.find({}).select("-photo").skip((page-1)*perPage).limit(perPage)
+    res.status(200).send({
+        success:true,
+        products
+    })
+}

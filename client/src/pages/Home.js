@@ -2,15 +2,26 @@ import React from 'react'
 import Layout from '../components/Layout/Layout'
 import { useState , useEffect} from 'react'
 import axios from 'axios'
-import { NavLink } from 'react-router-dom'
+import { NavLink, parsePath } from 'react-router-dom'
 import { Prices } from '../components/Prices'
 
 export default function Home() {
   const [categories,setCategories] = useState([])
-  const [products,setProducts] = useState()
+  const [products,setProducts] = useState([])
   const [checked,setChecked] = useState([])
   const [radio,setRadio] = useState([]) 
+  const [total,setTotal]= useState()
+  const [page,setPage] = useState(1)
 
+  const loadMore = async ()=>{
+    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/more-product/${page}`)
+    setProducts([...products,...res.data.products])
+  }
+  
+  useEffect(()=>{
+    if(page === 1) return
+    loadMore()
+  },[page])
 
   const getCategories = async() =>{
     try {
@@ -22,20 +33,26 @@ export default function Home() {
   
   }
 
+  const totalProduct = async()=>{
+    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/product-total`)
+    setTotal(res.data.total)
+  }
+
   useEffect(()=>{
     getCategories()
+    totalProduct()
   },[])
 
 
   //getting all products 
   const allProducts = async () =>{
-    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/get-all-products`)
+    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/more-product/${page}`)
     setProducts(res.data.products)
 }
 
 //useEffect for calling function when this components render
 useEffect(() => {
-   if(!checked.length || !radio.length) allProducts()
+   if(!checked.length || !radio.length) allProducts();
 }, [checked.length,radio.length])
 
 const filterProduct = async () =>{
@@ -51,7 +68,7 @@ const filterProduct = async () =>{
 }
 
 useEffect(()=>{
-  if(checked.length || radio.length) filterProduct()
+  if(checked.length || radio.length) filterProduct();
 },[checked,radio])
 
 const handleFilter = (value,id) =>{
@@ -63,6 +80,8 @@ const handleFilter = (value,id) =>{
   }
   setChecked(all)
 }
+
+
 
   return (
     <Layout tittle="Home - shop now">
@@ -98,27 +117,37 @@ const handleFilter = (value,id) =>{
         
           </>
         ))}
-        
         </div>
+        <button className="btn btn-success" onClick={()=>{window.location.reload()}}>Remove Filter</button>
       </div>
       </div>
-      <h1>{checked}</h1>
-      <div className="col-md-10 d-flex flex-wrap justify-content-center align-items-center">
+      <div className="col-md-10 d-flex flex-wrap justify-content-center align-items-center gap-3">
       {products ? products.map((p)=>(
                         <div className="card" style={{width: '18rem'}}>
                         <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} className="card-img-top" alt={p.slug} />
                         <div className="card-body">
                             <h5 className="card-title">{p.name}</h5>
-                            <p className="card-text">{p.description}</p>
+                            <p className="card-text">{p.description.substring(0,30)}...</p>
                             <p className="card-text">{p.category.name}</p>
-                            <NavLink className="btn btn-primary">{p.price}</NavLink>
+                            <p className="text-danger">$ {p.price}</p>
+                            <NavLink className="btn btn-primary ms-2">More Details</NavLink>
+                            <NavLink className="btn btn-danger ms-2">Add To Cart</NavLink>
                         </div>
                         </div>
                 ))
                     :"no products"
                 }
+               
                 </div>
-      </div>
+                
+                {products && products.length<total && (
+                  <button className="w-25 bg-dark text-white" onClick={(e)=>{
+                  e.preventDefault()
+                  setPage(page + 1)
+                }}>Load More</button>
+                )}
+              
+      </div>    
     </Layout>
   )
 }
