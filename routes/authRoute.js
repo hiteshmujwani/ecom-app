@@ -1,5 +1,5 @@
 import express from "express"
-import { forgetPasswordController, loginController, registerController, testController, updateProfileController } from "../controllers/authController.js";
+import { forgetPasswordController, getOrdersController, loginController, registerController, testController, updateProfileController } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 //register user
@@ -22,5 +22,8 @@ router.post('/forget-password',forgetPasswordController)
 
 //update profile
 router.put('/update-profile',requireSignIn,updateProfileController)
+
+//get orders 
+router.get('/get-orders',requireSignIn,getOrdersController)
 
 export default router;

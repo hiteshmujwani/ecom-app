@@ -1,16 +1,20 @@
 import React from 'react'
 import Layout from '../components/Layout/Layout'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { useCart } from '../context/cart'
 import { useAuth } from '../context/auth'
-import { token } from 'morgan'
 import { useNavigate } from 'react-router-dom'
+import DropIn from 'braintree-web-drop-in-react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 export const Cart = () => {
     const navigate = useNavigate()
     const [cart,setCart] = useCart()
-    const [auth,setAuth] = useAuth()
+    const [auth] = useAuth()
+    const [instance,setinstance] = useState()
+    const [clientToken ,setClientToken] = useState()
     const removeFromCart = (pid) =>{
-        const New = cart.filter((item)=>(item._id != pid))
+        const New = cart.filter((item)=>(item._id !== pid))
         setCart(New)
         localStorage.setItem('cart',JSON.stringify(New))
         
@@ -18,10 +22,41 @@ export const Cart = () => {
 
     const cartTotal = () =>{
         let total = 0;
-        cart.map((item)=>{
-            total = total + item.price;
-        })
+        cart.map((item)=>(
+            total = total + item.price
+        ))
         return total
+    }
+
+    //get payment gateway token 
+    const getToken = async () =>{
+        try {
+            console.log('called')
+            const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/braintree/token`)
+            setClientToken(res.data.clientToken)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(()=>{
+        getToken()
+    },[auth?.token])
+
+
+    //handle payment
+    const handlePayment = async()=>{
+        try {
+            const {nonce} = await instance.requestPaymentMethod()
+            const {data} = await axios.post(`${process.env.REACT_APP_API}/api/v1/product/braintree/payment`,{nonce,cart})
+            localStorage.removeItem('cart')
+            setCart([])
+            navigate('/dashboard/user/orders')
+            toast.success("order placed successfully")
+
+        } catch (error) {
+            console.log(error)
+        }
     }
   return (
    <Layout>
@@ -54,10 +89,32 @@ export const Cart = () => {
             <div className="text-center">
             <h4>Current address :- {auth.user.address}</h4>
             <button onClick={()=>{navigate('/dashboard/user/profile')}}>Update Address</button>
-            </div>
-        ):auth.token ? (<button onClick={()=>{navigate('/dashboard/user/profile')}}> Update Address</button>):(<button onClick={()=>{navigate('/login',{state:'/cart'})}}>Please Login</button>)}
+            <div className='mt-2'>
+
+            {!clientToken || !cart?.length ? (""):(<>
+            <DropIn
+            options={{
+                authorization:clientToken,
+                paypal:{
+                    flow:'vault'
+                },
+                
+            }
+        
+            }
+            onInstance={(instance)=>{setinstance(instance)}}/>
+
+                <button className="btn btn-primary" onClick={handlePayment}>Make Payment</button>
+        </>)}
+           
         </div>
         
+            </div>
+        ):auth.token ? (<button onClick={()=>{navigate('/dashboard/user/profile')}}> Update Address</button>):(<button onClick={()=>{navigate('/login',{state:'/cart'})}}>Please Login</button>)}
+
+       
+        
+        </div>
     </div>
    </Layout>
   )

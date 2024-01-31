@@ -3,6 +3,22 @@ import slugify from 'slugify'
 import productModel from '../models/product.model.js';
 import fs from 'fs'
 import categoryModel from '../models/category.model.js';
+import braintree from 'braintree';
+import dotenv from 'dotenv'
+import orderModel from '../models/order.model.js';
+import { error } from 'console';
+
+dotenv.config()
+
+
+//payment gateway
+var gateway = new braintree.BraintreeGateway({
+    environment: braintree.Environment.Sandbox,
+    merchantId: process.env.BRAINTREE_MERCHANT_ID,
+    publicKey: process.env.BRAINTREE_PUBLIC_KEY,
+    privateKey:process.env.BRAINTREE_PRIVATE_KEY,
+  });
+
 export const createProductController= async(req,res) =>{
   try {
     const {name,slug,description,price,category,quantity,shipping} = req.fields;
@@ -211,5 +227,51 @@ export const getCategoryProductController = async (req,res)=>{
     }
     
 }
+//payment gateway --- api 
+//token
+export const braintreeTokenController = async(req,res)=>{
+  try {
+    gateway.clientToken.generate({},function(err,response){
+        if(err){
+            res.status(500).send(err)
+        }
+        else{
+            res.send(response)
+        }
+    })
+  } catch (error) {
+    console.log(error)
+    console.log("error in payment gateway token")
+  }
+};
 
-
+export const braintreePaymentController = async(req,res)=>{
+    try {
+        const {cart,nonce} = req.body
+        let total = 0
+        cart.map((item)=>{
+            total += item.price
+        })
+        let newTransaction = gateway.transaction.sale({
+            amount:total,
+            paymentMethodNonce:nonce,
+            options:{
+                submitForSettlement:true
+            }
+        },function(err,result){
+            if(result){
+                const order = new orderModel({
+                    products:cart,
+                    payment:result,
+                    buyer:req.user._id
+                }).save()
+                res.json({ok:true})
+            }else{
+                res.status(500).send(error)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        console.log("error in payment function")
+    }
+}
