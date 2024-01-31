@@ -4,9 +4,11 @@ import { useState , useEffect} from 'react'
 import axios from 'axios'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Prices } from '../components/Prices'
+import { useCart } from '../context/cart'
 
 export default function Home() {
   const navigate = useNavigate()
+  const [cart,setCart] = useCart()
   const [categories,setCategories] = useState([])
   const [products,setProducts] = useState([])
   const [checked,setChecked] = useState([])
@@ -132,7 +134,7 @@ const handleFilter = (value,id) =>{
                             <p className="card-text">{p.category.name}</p>
                             <p className="text-danger">$ {p.price}</p>
                             <button className="btn btn-primary ms-2" onClick={()=>{navigate(`/product-details/${p.slug}`)}}>More Details</button>
-                            <NavLink className="btn btn-danger ms-2">Add To Cart</NavLink>
+                            <button onClick={()=>{setCart([...cart,p]); localStorage.setItem('cart',JSON.stringify([...cart,p]))}} className="btn btn-danger ms-2">Add To Cart</button>
                         </div>
                         </div>
                 ))

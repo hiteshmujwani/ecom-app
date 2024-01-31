@@ -8,7 +8,7 @@ export default function useCategory() {
     const getCategories = async() =>{
         const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/category/all-categories`)
 
-        setCategories(res.data.categories)
+        setCategories(res.data.categories)                                  
       }
 
       useEffect(()=>{

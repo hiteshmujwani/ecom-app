@@ -4,7 +4,9 @@ import { useNavigate,NavLink } from 'react-router-dom'
 import { useState,useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Layout from '../components/Layout/Layout'
+import { useCart } from '../context/cart'
 function CategoryProducts() {
+    const [cart,setCart] = useCart()
     const navigate = useNavigate()
     const params = useParams()
     const [products,setProducts] = useState([])
@@ -36,7 +38,7 @@ function CategoryProducts() {
                             <p className="card-text">{p.category.name}</p>
                             <p className="text-danger">$ {p.price}</p>
                             <button className="btn btn-primary ms-2" onClick={()=>{navigate(`/product-details/${p.slug}`)}}>More Details</button>
-                            <NavLink className="btn btn-danger ms-2">Add To Cart</NavLink>
+                            <button onClick={()=>{setCart([...cart,p]); localStorage.setItem('cart',JSON.stringify([...cart,p]))}} className="btn btn-danger ms-2">Add To Cart</button>
                         </div>
                         </div>
                 ))

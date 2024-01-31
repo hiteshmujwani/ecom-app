@@ -3,8 +3,10 @@ import { useState,useEffect } from 'react'
 import { useParams,useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Layout from '../../components/Layout/Layout'
+import { useCart } from '../../context/cart'
 
 export const ProductDetails = () => {
+  const [cart,setCart] = useCart()
 const params = useParams()
 const navigate = useNavigate()
 const [product,setProduct] = useState({})
@@ -40,6 +42,7 @@ const [product,setProduct] = useState({})
         <h4>{product.description}</h4>
         <h4>Pirce: ${product.price}</h4>
         <h4>Category: {product?.category?.name}</h4>
+        <button onClick={()=>{setCart([...cart,product]); localStorage.setItem('cart',JSON.stringify([...cart,product]))}} className="btn btn-danger">Add to Cart</button>
       </div>
     </div>
     <hr></hr>

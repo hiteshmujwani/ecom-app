@@ -25,7 +25,6 @@ export default function Login() {
               token:res.data.token
             })
             
-            await toast.success("LOGIN SUCCESSFULLY")
             localStorage.setItem('auth',JSON.stringify(res.data))
             navigate(location.state || '/')
           }

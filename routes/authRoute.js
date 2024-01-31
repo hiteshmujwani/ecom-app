@@ -1,5 +1,5 @@
 import express from "express"
-import { forgetPasswordController, loginController, registerController, testController } from "../controllers/authController.js";
+import { forgetPasswordController, loginController, registerController, testController, updateProfileController } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 //register user
@@ -19,5 +19,8 @@ router.get('/admin-auth',requireSignIn,isAdmin,(req,res)=>{
 })
 //forget password
 router.post('/forget-password',forgetPasswordController)
+
+//update profile
+router.put('/update-profile',requireSignIn,updateProfileController)
 
 export default router;

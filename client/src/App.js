@@ -23,12 +23,14 @@ import { SingleProduct } from './pages/admin/SingleProduct.js';
 import { Search } from './pages/user/Search.js';
 import { ProductDetails } from './pages/user/ProductDetails.js';
 import CategoryProducts from './pages/CategoryProducts.js';
+import { Cart } from './pages/Cart.js';
 
 function App() {
   return (
     <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/search' element={<Search/>}/>
+      <Route path='/Cart' element={<Cart/>}/>    
       <Route path='/product-details/:slug' element={<ProductDetails/>}/>
       <Route path='/category/:slug' element={<CategoryProducts/>}/>
       {/* { user dashboard} */}

@@ -130,3 +130,30 @@ export const forgetPasswordController = async(req,res) =>{
 export const testController = async(req,res) =>{
     res.send("routes")
 }
+
+export const updateProfileController = async(req,res) =>{
+    try {
+        const {name,email,password,phone,address} = req.body
+        const user = await userModel.findById(req.user._id)
+
+        const hashedPassword =  password ? await hashPassword(password) : undefined;
+        const updateUser = await userModel.findByIdAndUpdate(req.user._id,{
+            name:name || user.name,
+            password:hashedPassword || user.password,
+            phone:phone || user.phone,
+            address:address || user.address,
+        })
+        res.status(200).send({
+            success:true,
+            message:"profile Updated",
+            updateUser
+        })
+    } catch (error) {
+        res.status(405).send({
+            success:false,
+            message:"something wrong in upatng profile",
+            error
+
+        })
+    }
+}

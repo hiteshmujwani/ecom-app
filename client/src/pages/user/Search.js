@@ -2,7 +2,9 @@ import React from 'react'
 import { useSearch } from '../../context/search'
 import Layout from '../../components/Layout/Layout'
 import { NavLink , useNavigate} from 'react-router-dom'
+import { useCart } from '../../context/cart'
 export const Search = () => {
+  const [cart,setCart] = useCart()
   const navigate = useNavigate()
     const [value] = useSearch()
   return (
@@ -16,7 +18,7 @@ export const Search = () => {
                             <p className="card-text">{p.category.name}</p>
                             <p className="text-danger">$ {p.price}</p>
                             <button onClick={()=>{navigate(`/product-details/${p.slug}`)}} className="btn btn-primary ms-2">More Details</button>
-                            <button className="btn btn-danger ms-2">Add To Cart</button>
+                            <button onClick={()=>{setCart([...cart,p]); localStorage.setItem('cart',JSON.stringify([...cart,p]))}} className="btn btn-danger ms-2">Add To Cart</button>
                         </div>
                         </div>
                 ))

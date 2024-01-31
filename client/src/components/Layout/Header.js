@@ -4,9 +4,11 @@ import { useAuth } from '../../context/auth'
 import toast from 'react-hot-toast'
 import { SearchInput } from '../Form/SearchInput'
 import useCategory from '../../utils/useCategory.js'
+import { useCart } from '../../context/cart.js'
 
 
 export default function Header() {
+  const [cart] = useCart()
   const categories = useCategory();
   const [auth,setAuth] = useAuth()
   const handleLogout = () =>{
@@ -64,7 +66,7 @@ export default function Header() {
         </>)
         }
         <li className="nav-item">
-          <NavLink className="nav-link active" aria-current="page" to="/cart">Cart(0)</NavLink>
+          <NavLink className="nav-link active" aria-current="page" to="/cart">Cart({cart.length})</NavLink>
         </li>
       </ul>
     </div>
