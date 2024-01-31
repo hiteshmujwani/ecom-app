@@ -12,7 +12,7 @@ router.post('/create-category',requireSignIn,isAdmin,createCategoryController)
 router.put('/update-category/:id',requireSignIn,isAdmin,updateCategoryController)
 
 //getting all categories
-router.get('/all-categories',getAllCategoryController)
+router.get('/all-categories',getAllCategoryController)  // requiresignin and isadmin middleware removed from here
 
 //getting single category
 router.get('/single-category/:slug',requireSignIn,isAdmin,singleCategoryController)

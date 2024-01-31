@@ -46,7 +46,7 @@ export const SingleProduct = () => {
 
     useEffect(()=>{
         singleProduct()
-
+      
     },[])
 
 

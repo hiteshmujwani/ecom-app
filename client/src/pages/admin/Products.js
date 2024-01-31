@@ -11,7 +11,7 @@ export const Products = () => {
     //getting all products 
     const allProducts = async () =>{
         const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/get-all-products`)
-        setProducts(res.data.products)
+        setProducts(res.data?.products)
     }
 
     //useEffect for calling function when this components render

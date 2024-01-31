@@ -2,6 +2,7 @@
 import slugify from 'slugify'
 import productModel from '../models/product.model.js';
 import fs from 'fs'
+import categoryModel from '../models/category.model.js';
 export const createProductController= async(req,res) =>{
   try {
     const {name,slug,description,price,category,quantity,shipping} = req.fields;
@@ -176,3 +177,39 @@ export const moreProductController = async(req,res) =>{
         products
     })
 }
+
+
+export const searchProductController = async (req,res) =>{
+    try {
+        const {keyword} = req.params
+        const results = await productModel.find({name:keyword}).select('-photo')
+        res.status(200).send(results)
+    } catch (error) {
+        console.log(error)
+        res.status(404).send({
+            success:false,
+            messege:"error in searching product",
+            error
+        })
+    }
+}
+
+export const getCategoryProductController = async (req,res)=>{
+    try {
+        const {slug} = req.params
+    const category = await categoryModel.find({slug});
+    const product = await productModel.find({category})
+    res.status(200).send({
+        success:true,
+        message:"sored",
+        product
+    })
+    } catch (error) {
+        res.status(403).send({
+            error
+        })
+    }
+    
+}
+
+

@@ -20,11 +20,17 @@ import Profile from './pages/user/Profile.js';
 import Orders from './pages/user/Orders.js';
 import { Products } from './pages/admin/Products.js';
 import { SingleProduct } from './pages/admin/SingleProduct.js';
+import { Search } from './pages/user/Search.js';
+import { ProductDetails } from './pages/user/ProductDetails.js';
+import CategoryProducts from './pages/CategoryProducts.js';
 
 function App() {
   return (
     <Routes>
       <Route path='/' element={<Home/>}/>
+      <Route path='/search' element={<Search/>}/>
+      <Route path='/product-details/:slug' element={<ProductDetails/>}/>
+      <Route path='/category/:slug' element={<CategoryProducts/>}/>
       {/* { user dashboard} */}
       <Route path='/dashboard' element={<PrivateRoute/>}>
       <Route path='user' element={<Dashboard/>}/>

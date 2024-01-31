@@ -2,10 +2,11 @@ import React from 'react'
 import Layout from '../components/Layout/Layout'
 import { useState , useEffect} from 'react'
 import axios from 'axios'
-import { NavLink, parsePath } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Prices } from '../components/Prices'
 
 export default function Home() {
+  const navigate = useNavigate()
   const [categories,setCategories] = useState([])
   const [products,setProducts] = useState([])
   const [checked,setChecked] = useState([])
@@ -90,7 +91,7 @@ const handleFilter = (value,id) =>{
       <h3>Filter By Category</h3>
       <div className="d-flex flex-column">
       { categories ? categories.map((c)=>(
-        <>
+       
         <div key={c._id}  className="form-check">
         <input className="form-check-input" onChange={(e)=>handleFilter(e.target.checked,c._id)} type="checkbox" id="flexCheckDefault" />
         <label className="form-check-label" htmlFor="flexCheckDefault">
@@ -98,14 +99,14 @@ const handleFilter = (value,id) =>{
          </label>
         </div>
 
-        </>
+      
       )) : "no filters"}
       </div>
       <h3>Filter By Price</h3>
         <div className='d-flex flex-column'>
         <div className="form-check d-flex flex-column">
         {Prices.map((p)=>(
-          <>
+      
           
           <div key={p._id} className="form-check">
           <input className="form-check-input" value={p.array} type="radio" onChange={(e)=>setRadio(e.target.value)} name="flexRadioDefault" id="flexRadioDefault1" />
@@ -115,7 +116,7 @@ const handleFilter = (value,id) =>{
           </div>
 
         
-          </>
+      
         ))}
         </div>
         <button className="btn btn-success" onClick={()=>{window.location.reload()}}>Remove Filter</button>
@@ -123,14 +124,14 @@ const handleFilter = (value,id) =>{
       </div>
       <div className="col-md-10 d-flex flex-wrap justify-content-center align-items-center gap-3">
       {products ? products.map((p)=>(
-                        <div className="card" style={{width: '18rem'}}>
+                        <div key={p._id} className="card" style={{width: '18rem'}}>
                         <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} className="card-img-top" alt={p.slug} />
                         <div className="card-body">
                             <h5 className="card-title">{p.name}</h5>
                             <p className="card-text">{p.description.substring(0,30)}...</p>
                             <p className="card-text">{p.category.name}</p>
                             <p className="text-danger">$ {p.price}</p>
-                            <NavLink className="btn btn-primary ms-2">More Details</NavLink>
+                            <button className="btn btn-primary ms-2" onClick={()=>{navigate(`/product-details/${p.slug}`)}}>More Details</button>
                             <NavLink className="btn btn-danger ms-2">Add To Cart</NavLink>
                         </div>
                         </div>
