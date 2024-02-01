@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState,useEffect } from 'react'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import Layout from '../../components/Layout/Layout'
 import { useCart } from '../../context/cart'
@@ -8,7 +8,6 @@ import { useCart } from '../../context/cart'
 export const ProductDetails = () => {
   const [cart,setCart] = useCart()
 const params = useParams()
-const navigate = useNavigate()
 const [product,setProduct] = useState({})
 
 
@@ -26,6 +25,7 @@ const [product,setProduct] = useState({})
   
   useEffect(()=>{
     getProductDetails()
+    //eslint-disbale-next-line
     },[])
     
   
@@ -35,7 +35,7 @@ const [product,setProduct] = useState({})
    <Layout>
     <div className='row'>
       <div className="col-md-6 text-center">
-        {product ?( <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product?._id}`} alt={product?.slug} style={{"height":"300px" , "width":"300px"}}/>):""}
+        {product ?( <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`} alt={product?.slug} style={{"height":"300px" , "width":"300px"}}/>):""}
       </div>
       <div className="col-md-6">
         <h4>{product?.name}</h4>

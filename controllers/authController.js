@@ -162,7 +162,25 @@ export const updateProfileController = async(req,res) =>{
 
 export const getOrdersController = async (req,res) =>{
     try {
-        const orders = await orderModel.find({buyer:req.user._id}).populate("products","-photo").populate("buyer","name")
+        const orders = await orderModel.find({buyer:req.user._id}).populate("buyer").populate("products","-photo")
+        res.status(201).send({
+            success:true,
+            message:"all order fetched",
+            orders
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            success:false,
+            messege:"error in getting orders",
+            error
+        })
+    }
+}
+
+export const getAllOrdersController = async(req,res)=>{
+    try {
+        const orders = await orderModel.find({}).populate("buyer").populate("products","-photo")
         res.status(201).send({
             success:true,
             message:"all order fetched",
@@ -173,6 +191,27 @@ export const getOrdersController = async (req,res) =>{
         res.status(500).send({
             success:false,
             messege:"error in getting all orders",
+            error
+        })
+    }
+}
+
+export const changeOrderStatus = async (req,res) =>{
+    try {
+        const {oid} = req.params
+        const {status} = req.body
+        
+        const orders = await orderModel.findByIdAndUpdate(oid,{status},{new:true})
+        res.status(200).send({
+            success:true,
+            message:"status changed",
+            orders
+
+        })
+    } catch (error) {
+        res.status(500).send({
+            success:true,
+            message:"something wrong in admin orders",
             error
         })
     }

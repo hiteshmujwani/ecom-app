@@ -24,7 +24,7 @@ function CategoryProducts() {
 
     useEffect(()=>{
      if(params.slug) getCategoryProduct()
-    },[params])
+    },[params.slug])
    
   return (
     <Layout>

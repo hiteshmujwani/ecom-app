@@ -1,33 +1,44 @@
-import React from 'react'
-import { useState,useEffect } from 'react'
-import UserMenu from '../../components/UserMenu'
-import Layout from '../../components/Layout/Layout'
-import { useAuth } from '../../context/auth'
-import axios from 'axios'
+import React,{useState,useEffect} from "react";
+import Layout from '../../components/Layout/Layout.js'
+import AdminMenu from "../../components/AdminMenu.js";
+import { useAuth } from "../../context/auth.js";
+import axios from "axios";
 
-export default function Orders() {
+export const AllOrders = () => {
   const [auth] = useAuth()
   const [orders,setOrders] = useState()
+  const [status,setstatus]= useState(["not confirmed","order Confirmed","shipped","out for delivery","cancel","delivered"])
 
   useEffect(()=>{
     getOrders()
-  },[])
-  
+  },[ ])
+
   const getOrders = async ()=>{
-    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/auth/get-orders`)
+    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/auth/all-orders`)
     setOrders(res.data.orders)
+  }
+
+  const handleStatus = async (oid,value) =>{
+   try {
+    const res = await axios.put(`${process.env.REACT_APP_API}/api/v1/auth/change-status/${oid}`,{"status":value})
+    getOrders()
+   } catch (error) {
+    console.log(error)
+   }
   }
 
 
   return (
-    <Layout tittle="Create Category - ECOMMERCE APP">
+    <Layout tittle="All Users - ECOMMERCE APP">
     <div className="container-fluid">
       <div className="row">
          <div className="col-md-3">
-          <UserMenu/>
+          <AdminMenu/>
          </div>
          <div className="col-md-9">
-                  {orders?.map((order,index)=>{
+
+
+         {orders?.map((order,index)=>{
                     return(
                       <div key={index} className='border shadow mb-5'>
                       <table className="table">
@@ -45,7 +56,7 @@ export default function Orders() {
                       
                       <tr>
                         <td>{index + 1}</td>
-                        <td>{order.status}</td>
+                        <td><select onChange={(e)=>{handleStatus(order._id,e.target.value)}} defaultValue={order.status}>{status.map((status,index)=>(<option key={index} value={status}>{status}</option>))}</select></td>
                         <td>{order.buyer.name}</td>
                         <td>{order.createdAt}</td>
                         <td>{order.payment.success ? "success" : "failed"}</td>
@@ -67,10 +78,12 @@ export default function Orders() {
        
       </div>
     </div>))}
-                </div>)})}  
+                </div>)})}
+
+
          </div>
       </div>
     </div>
   </Layout>
   )
-}
+};

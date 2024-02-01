@@ -24,6 +24,7 @@ import { Search } from './pages/user/Search.js';
 import { ProductDetails } from './pages/user/ProductDetails.js';
 import CategoryProducts from './pages/CategoryProducts.js';
 import { Cart } from './pages/Cart.js';
+import { AllOrders } from './pages/admin/AllOrders.js';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
       <Route path='admin/products' element={<Products/>}/>
       <Route path='admin/products/:slug' element={<SingleProduct/>}/>
       <Route path='admin/all-users' element={<AllUsers/>}/>
+      <Route path='admin/all-orders' element={<AllOrders/>}/>
       </Route>
       <Route path='/login' element={<Login/>}/>
       <Route path='/forget-password' element={<ForgetPassword/>}/>
