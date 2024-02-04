@@ -10,7 +10,7 @@ export const Products = () => {
 
     //getting all products 
     const allProducts = async () =>{
-        const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/get-all-products`)
+        const res = await axios.get(`/api/v1/product/get-all-products`)
         setProducts(res.data?.products)
     }
 
@@ -26,24 +26,36 @@ export const Products = () => {
                 <AdminMenu/>
             </div>
             <div className="col-md-9">
-                <h1 className='text-center'>All Products List</h1>
+                <h1 className='text-center mb-5 font-black text-4xl'>All Products List</h1>
                 <div className="d-flex flex-wrap gap-4 align-items-center justify-content-center">
-                {products ? products.map((p)=>(
-                    <Link to={`/dashboard/admin/products/${p.slug}`}>
-                        <div className="card" style={{width: '18rem'}}>
-                        <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} className="card-img-top" alt={p.slug} />
-                        <div className="card-body">
-                            <h5 className="card-title">{p.name}</h5>
-                            <p className="card-text">{p.description}</p>
-                            <p className="card-text">{p.category.name}</p>
-                            <NavLink className="btn btn-primary">{p.price}</NavLink>
-                        </div>
-                        </div>
-
-                    </Link>
-                ))
-                    :"no products"
-                }
+                {products &&
+            products.map((p) => (
+                <Link to={`/dashboard/admin/products/${p.slug}`}>
+              <div className="card">
+                <div className="card-img">
+                  <img
+                    src={`/api/v1/product/product-photo/${p._id}`}
+                    className="card-img-top"
+                    alt={p.slug}
+                  />
+                </div>
+                <div className="card-info">
+                  <p className="text-xl font-bold">{p.name.substring(0,20)}...</p>
+                  <p className="text-body">
+                    {p.description.substring(0, 30)}...
+                  </p>
+                </div>
+                <div className="card-footer">
+                  <span className="text-xl font-medium flex gap-3">
+                    ${p.price}
+                    <p className="line-through text-danger">
+                      ${p.price + (p.price * 40) / 100}
+                    </p>
+                  </span>
+                </div>
+              </div>
+              </Link>
+            ))}
                 </div>
             </div>
         </div>

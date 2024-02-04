@@ -47,22 +47,20 @@ export const createProductController = async (req, res) => {
 // updating product
 export const updateProductController = async (req, res) => {
   try {
-    const { name, slug, description, price, category, quantity, shipping } =
-      req.fields;
+    const { name, slug, description, price, category, quantity, shipping } = req.fields;
     const { photo } = req.files;
 
-    // const product = await productModel.find({_id:req.params.id});
-    // product.photo.data = fs.readFileSync(photo.path)
-    // product.photo.contentType = photo.type;
 
     const updatedProduct = await productModel
       .findByIdAndUpdate(
         req.params.id,
         { ...req.fields, slug: slugify(name) },
         { new: true }
-      )
-      .select(-photo)
+      ).select("-photo")
       .populate("category");
+
+
+
     res.status(200).send({
       success: true,
       message: "product Updated Successfully",
@@ -193,7 +191,7 @@ export const totalProductController = async (req, res) => {
 
 export const moreProductController = async (req, res) => {
   const page = req.params.page ? req.params.page : 1;
-  const perPage = 4;
+  const perPage = 8;
 
   const products = await productModel
     .find({})
@@ -209,7 +207,7 @@ export const moreProductController = async (req, res) => {
 export const searchProductController = async (req, res) => {
   try {
     const { keyword } = req.params;
-    const results = await productModel.find({ name: keyword }).select("-photo");
+    const results = await productModel.find({$or:[{name:{$regex: keyword,$options:"i"}},{description:{$regex: keyword,$options:"i"}}]}).select("-photo");
     res.status(200).send(results);
   } catch (error) {
     console.log(error);

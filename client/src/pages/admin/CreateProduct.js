@@ -17,7 +17,7 @@ export default function CreateProduct() {
   const navigate = useNavigate()
 
   const getCategories = async() =>{
-    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/category/all-categories`)
+    const res = await axios.get(`/api/v1/category/all-categories`)
 
     setCategories(res.data.categories)
   }
@@ -36,7 +36,7 @@ export default function CreateProduct() {
     productdata.append("photo",photo)
     productdata.append("shipping",shipping)
  
-    const res = await axios.post(`${process.env.REACT_APP_API}/api/v1/product/create-product`,productdata)
+    const res = await axios.post(`/api/v1/product/create-product`,productdata)
     if(res.data.success){
       toast.success("product created")
       navigate('/dashboard/admin/products')
@@ -49,37 +49,35 @@ export default function CreateProduct() {
          <div className="col-md-3">
           <AdminMenu/>
          </div>
-         <div className="col-md-9">
-          <h1>Create Product</h1>
-          <div>
-            
-              <select className='w-100' onChange={(e)=>{setCategory(e.target.value)}} >
+         <div className="col-md-9 mt-2" style={{"height":"80vh"}}> 
+          <h1 className='text-3xl font-medium text-center p-3 border border-black bg-gray-500 text-white'>Create Your New Product</h1>
+          <div className='flex flex-col'> 
+          <div className='flex w-100 mt-3 gap-3'>
+              <select className='w-50' onChange={(e)=>{setCategory(e.target.value)}} >
               <option>select Category</option>
                 {categories.map((c)=>(
                   <option key={c._id} value={c._id}>{c.name}</option>
                 ))}
               </select>
 
-              <label className='btn btn-outline-secondary mt-3 w-100'>
+              <label className='actions text-center text-white font-medium text-xl uppercase w-50 px-3 py-2'>
                 {photo ? photo.name : "Upload Photo"}
                 <input type="file" name='photo' accept='image/*' onChange={(e)=>{setPhoto(e.target.files[0])}} hidden />
               </label>
-
-              <div className=''>
-                preview
-                {photo && <img src={URL.createObjectURL(photo)} alt='product-img' height={"200px"}/>}
               </div>
 
-              <input type='text' name='name' value={name} onChange={(e)=>{setName(e.target.value)}} placeholder='Product name'/>
-              <input type='textarea' name='description' value={description} onChange={(e)=>{setDescription(e.target.value)}} placeholder='Product Description'/>
-              <input type='number' name='quantity' value={quantity} onChange={(e)=>{setQuantity(e.target.value)}} placeholder='Product quantity'/>
-              <input type='number' name='price' value={price} onChange={(e)=>{setPrice(e.target.value)}} placeholder='Product price'/>
-              <select onChange={(e)=> {setShipping(e.target.value)}}>
-                <option value={true}>no</option>
-                <option value={false}>yes</option>
-              </select>
+              <div className='mt-2 w-25'>
+                <h1 className=' text-xl bg-gray-500 text-white p-2 text-center font-medium'>PREVIEW OF SELECTED PHOTO</h1>
+                {photo && <img src={URL.createObjectURL(photo)} className='' alt='product-img'/>}
+              </div>
+
+              <input className="mt-3 font-medium" type='text' name='name' value={name} onChange={(e)=>{setName(e.target.value)}} placeholder='Product name'/>
+              <input type='textarea' className='border border-black p-2 mt-3 font-medium' name='description' value={description} onChange={(e)=>{setDescription(e.target.value)}} placeholder='Product Description'/>
+              <div className="mt-3 flex w-100 gap-3"><input className='w-50' type='number' name='quantity' value={quantity} onChange={(e)=>{setQuantity(e.target.value)}} placeholder='Product quantity'/>
+              <input type='number' className='w-50' name='price' value={price} onChange={(e)=>{setPrice(e.target.value)}} placeholder='Product price'/>
+              </div>
                 
-                <button type="submit" onClick={handleCreateProduct}>Create Product</button>
+                <button className='actions w-25 self-center mt-5 py-3 px-6 text-white text-2xl font-medium' type="submit" onClick={handleCreateProduct}>Create Product</button>
            
           </div>
          </div>

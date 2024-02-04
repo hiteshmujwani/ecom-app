@@ -11,8 +11,8 @@ function Dashboard() {
            <div className="col-md-3">
             <UserMenu/>
            </div>
-           <div className="col-md-3">
-            <div className="card">
+           <div className="col-md-9" style={{"height":"80vh"}}>
+            <div className="mt-2 text-4xl flex flex-col gap-3 font-medium border-black border" >
               <h3>USER NAME : {auth.user.name}</h3>
               <h3>USER EMAIL : {auth.user.email}</h3>
               <h3>USER CONTACT : {auth.user.phone}</h3>

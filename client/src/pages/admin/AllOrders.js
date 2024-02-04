@@ -14,13 +14,13 @@ export const AllOrders = () => {
   },[ ])
 
   const getOrders = async ()=>{
-    const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/auth/all-orders`)
+    const res = await axios.get(`/api/v1/auth/all-orders`)
     setOrders(res.data.orders)
   }
 
   const handleStatus = async (oid,value) =>{
    try {
-    const res = await axios.put(`${process.env.REACT_APP_API}/api/v1/auth/change-status/${oid}`,{"status":value})
+    const res = await axios.put(`/api/v1/auth/change-status/${oid}`,{"status":value})
     getOrders()
    } catch (error) {
     console.log(error)
@@ -66,18 +66,18 @@ export const AllOrders = () => {
               </table>
               {
                 order.products.map((product)=>(
-                  <div key={Math.random()} className='row'>
-     <div className="col-md-6 text-center">
-     <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`} alt={product?.slug} style={{"height":"300px" , "width":"300px"}}/>
+                  <div key={Math.random()} className='row m-3'>
+     <div className="col-md-2 text-center object-contain" style={{"height":"150px","width":"150px"}}>
+     <img src={`/api/v1/product/product-photo/${product._id}`} alt={product?.slug}/>
       </div>
-      <div className="col-md-6">
-        <h4>{product?.name}</h4>
-        <h4>{product.description}</h4>
-        <h4>Pirce: ${product.price}</h4>
-        <h4>Category: {product?.category?.name}</h4>
-       
+      <div className="col-md-4 flex flex-column gap-2 text-xl font-light">
+        <h4><span className="font-bold">Product Name:- </span>{product?.name}</h4>
+        <h4><span className="font-bold">Product description:- </span>{product.description.substring(0,50)}...</h4>
+        <h4><span className="font-bold">Product Price:- </span>${product.price}</h4>
       </div>
-    </div>))}
+      <hr/>
+    </div>
+    ))}
                 </div>)})}
 
 

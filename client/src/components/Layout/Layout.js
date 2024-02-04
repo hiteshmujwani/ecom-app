@@ -1,5 +1,5 @@
 import React from 'react'
-import Header from './Header.js'
+import {Header} from './Header.js'
 import Footer from './Footer.js'
 import Helmet from 'react-helmet'
 import { Toaster } from 'react-hot-toast';
